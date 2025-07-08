@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import backgroundMp4 from '@/assets/background_mp4.mp4'
+const headerTitle = import.meta.env.VITE_HEADER_TITLE
 </script>
 
 <template>
@@ -21,7 +22,7 @@ import backgroundMp4 from '@/assets/background_mp4.mp4'
     <!--头部-->
     <div class="header-container">
       <div></div>
-      <div class="header-title">BOCOO智慧实验室可视化平台</div>
+      <div class="header-title">{{ headerTitle }}</div>
       <div></div>
     </div>
     <!--内容-->

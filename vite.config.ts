@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
+import vueDevTools from 'vite-plugin-vue-devtools'
 import path from 'path' // 引入 path 模块
 import copy from 'rollup-plugin-copy'
 
@@ -8,7 +9,7 @@ import copy from 'rollup-plugin-copy'
 export default defineConfig({
   base: './',
   plugins: [
-      vue(), vueJsx(),
+      vue(), vueJsx(), vueDevTools(),
       copy({
         targets: [
           {src: 'node_modules/@baidumap/mapv-three/dist/assets', dest: 'public/mapvthree'},

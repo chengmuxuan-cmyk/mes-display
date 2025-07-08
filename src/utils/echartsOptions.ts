@@ -28,10 +28,8 @@ export const barChartsOption = {
             }
         },
         axisLabel: {
-            textStyle: {
-                color: `#fff`,
-                margin: 16
-            }
+            color: `#fff`,
+            margin: 16
         },
         axisTick: {
             show: false
@@ -54,9 +52,7 @@ export const barChartsOption = {
         },
         axisLabel: {
             margin: 20,
-            textStyle: {
-                color: `#65F5FD`
-            }
+            color: `#65F5FD`
         },
         axisTick: {
             show: false
@@ -73,28 +69,24 @@ export const barChartsOption = {
         label: {
             show: false,
             position: `top`,
-            textStyle: {
-                color: `#fff`
-            }
+            color: `#fff`
         },
         itemStyle: {
-            normal: {
-                color: {
-                    colorStops: [{
-                        offset: 0,
-                        color: `rgba(0,179,202,.9)`
-                    }, {
-                        offset: 1,
-                        color: `rgba(2,39,47,.5)`
-                    }],
-                    x: 0,
-                    y: 0,
-                    x2: 0,
-                    y2: 1,
-                    type: `linear`,
-                    global: false
-                }
-            }
+          color: {
+            colorStops: [{
+              offset: 0,
+              color: `rgba(0,179,202,.9)`
+            }, {
+              offset: 1,
+              color: `rgba(2,39,47,.5)`
+            }],
+            x: 0,
+            y: 0,
+            x2: 0,
+            y2: 1,
+            type: `linear`,
+            global: false
+          }
         },
         data: [],
     }]
@@ -129,10 +121,8 @@ export const lineChartsOption = {
       }
     },
     axisLabel: {
-      textStyle: {
-        color: `#fff`,
-        margin: 16
-      }
+      color: `#fff`,
+      margin: 16,
     },
     axisTick: {
       show: false
@@ -155,9 +145,7 @@ export const lineChartsOption = {
     },
     axisLabel: {
       margin: 20,
-      textStyle: {
-        color: `#65F5FD`
-      }
+      color: `#65F5FD`,
     },
     axisTick: {
       show: false
@@ -170,17 +158,13 @@ export const lineChartsOption = {
     symbol: `emptyCircle`,
     symbolSize: 6,
     lineStyle: {
-      normal: {
-        color: ``
-      }
+      color: ``
     },
     label: {
       show: false
     },
     itemStyle: {
-      normal: {
-        color: ``
-      }
+      color: ``
     },
     tooltip: {
       show: true

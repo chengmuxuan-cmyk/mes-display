@@ -4,7 +4,8 @@ import { getScreenData } from '@/api/api'
 import Card from "@/components/card/Card.vue";
 import TableComp from "@/components/table/TableComp.vue";
 import { barChartsOption, lineChartsOption } from "@/utils/echartsOptions";
-import Demo from "@/components/three/Demo.vue";
+import DemoThree from "@/components/three/DemoThree.vue";
+// import Demo from "@/components/three/Demo.vue";
 
 // 获取温度湿度等数据
 let emvironmentData = reactive({
@@ -71,8 +72,8 @@ const pressureTestOptionData = computed(() => {
   option.yAxis[0].name = 'Pa';
   option.series[0].data = [12.5, 13.8, 14.2, 15.1, 14.9, 15.2];
   option.series[0].name = '压强';
-  option.series[0].lineStyle.normal.color = '#28ffb3';
-  option.series[0].itemStyle.normal.color = '#28ffb3';
+  option.series[0].lineStyle.color = '#28ffb3';
+  option.series[0].itemStyle.color = '#28ffb3';
   return option;
 });
 
@@ -84,8 +85,8 @@ const bacteriaOption = computed(() => {
   option.yAxis[0].name = 'CFU/m³';
   option.series[0].data = [65, 59, 50, 58, 56, 55, 42];
   option.series[0].name = '浮游菌/沉降菌';
-  option.series[0].lineStyle.normal.color = '#ff6b6b';
-  option.series[0].itemStyle.normal.color = '#ff6b6b';
+  option.series[0].lineStyle.color = '#ff6b6b';
+  option.series[0].itemStyle.color = '#ff6b6b';
   return option;
 });
 
@@ -135,7 +136,8 @@ const equipmentOperationstatusColumn = ref([
     </div>
     <div class="center-content">
       <div>
-        <Demo></Demo>
+<!--        <demo></demo>-->
+        <demo-three></demo-three>
       </div>
       <div>
         <card title="尘埃离子浓度">
@@ -180,7 +182,7 @@ const equipmentOperationstatusColumn = ref([
   justify-content: space-around;
 }
 .left-content, .right-content {
-  width: 25%;
+  width: 27%;
   min-width: 25rem;
   padding: 1% 0;
   height: 100%;
@@ -195,7 +197,7 @@ const equipmentOperationstatusColumn = ref([
   width: 100%;
 }
 .center-content {
-  width: 45%;
+  width: 40%;
   padding: 1% 0;
   height: 100%;
   box-sizing: border-box;
