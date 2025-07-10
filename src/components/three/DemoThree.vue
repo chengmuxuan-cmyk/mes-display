@@ -8,22 +8,32 @@ let renderer: THREE.WebGLRenderer;
 let controls: any;
 let animationId: number;
 
+// 建筑参数
+const floorWidth = 40; // 楼层宽度
+const floorDepth = 30; // 楼层深度
+const buildingHeight = 5; // 每层高度
+const floorCount = 3; // 楼层数量
+const wallThickness = 0.3; // 墙壁厚度
+// const floorColor = [0xff0000, 0x00ff00, 0x0000ff]; // 楼层颜色
+
+
 const container = ref<HTMLElement | null>(null);
 
 const init = () => {
+  // 获取容器元素并设置渲染器尺寸
+  container.value = document.getElementById('container');
+
   // 初始化场景、相机和渲染器
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera(
-      75,
-      window.innerWidth / window.innerHeight,
+      90,
+      container.value.clientWidth / container.value.clientHeight,
       0.1,
-      100
+      1000
   );
 
   renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 
-  // 获取容器元素并设置渲染器尺寸
-  container.value = document.getElementById('container');
   if (container.value) {
     // 设置渲染器尺寸为容器元素的大小
     renderer.setSize(container.value.clientWidth, container.value.clientHeight);
@@ -33,7 +43,8 @@ const init = () => {
   // 添加轨道控制器
   import('three/examples/jsm/controls/OrbitControls').then(controlsModule => {
     controls = new controlsModule.OrbitControls(camera, renderer.domElement);
-    controls.enableZoom = false; // 禁用缩放
+    // controls.enableZoom = false; // 禁用缩放
+    // controls.enableRotate = false; // 禁用旋转
     animate();
   });
 
@@ -42,25 +53,17 @@ const init = () => {
     container.value.addEventListener('click', onClick);
   }
 
-  // 创建U型地板
+  // 创建建筑
   createBuilding();
 
   // 设置相机位置
-  camera.position.set(25, 25, 25);
+  camera.position.set(0, 17, 35);
   camera.lookAt(0, 0, 0);
 };
 
 const createBuilding = () => {
-  // 建筑参数
-  const floorWidth = 20; // 楼层宽度
-  const floorDepth = 20; // 楼层深度
-  const buildingHeight = 5; // 每层高度
-  const floorCount = 3; // 楼层数量
-  const wallThickness = 0.3; // 墙壁厚度
 
   // 材质
-  // 地板材质
-  const floorMaterial = new THREE.MeshStandardMaterial({ color: 0xaaaaaa });
   // 外墙材质
   const wallMaterial = new THREE.MeshStandardMaterial({ color: 0xffdddd });
   // 立柱材质
@@ -74,32 +77,34 @@ const createBuilding = () => {
         buildingHeight, // 高度
         floorDepth // 深度
     );
-    const floorMaterial = new THREE.MeshStandardMaterial({ color: 0xaaaaaa, transparent: true, opacity: 0.5 });
-    const floor = new THREE.Mesh(floorGeometry, floorMaterial);
-    floor.position.y = i * buildingHeight + buildingHeight / 2;
-    scene.add(floor);
+    if(i !== floorCount - 1) {
+      const floorMaterial = new THREE.MeshStandardMaterial({ color: 0xaaaaaa, transparent: true, opacity: 0.5 });
+      const floor = new THREE.Mesh(floorGeometry, floorMaterial);
+      floor.position.y = i * buildingHeight + buildingHeight / 2;
+      scene.add(floor);
+    }
 
-    // 创建四面墙体，留出前面墙不显示以展示内部结构
-    // 后侧墙体
-    const backWallGeometry = new THREE.BoxGeometry(floorWidth, buildingHeight, wallThickness);
-    const backWallMaterial = new THREE.MeshStandardMaterial({ color: 0xffdddd, transparent: true, opacity: 0.3 });
-    const backWall = new THREE.Mesh(backWallGeometry, backWallMaterial);
-    backWall.position.set(
+    // 创建四面墙体，留出后面墙不显示以展示内部结构
+    // 前侧墙体（设置为透明）
+    const frontWallGeometry = new THREE.BoxGeometry(floorWidth, buildingHeight, wallThickness);
+    const frontWallMaterial = new THREE.MeshStandardMaterial({ color: 0xffdddd, transparent: true, opacity: 0 });
+    const frontWall = new THREE.Mesh(frontWallGeometry, frontWallMaterial);
+    frontWall.position.set(
         0,
         i * buildingHeight + buildingHeight/2,
         floorDepth/2 + wallThickness/2
     );
-    scene.add(backWall);
+    scene.add(frontWall);
 
-    // 前侧墙体（设置为透明）
-    const frontWallGeometry = new THREE.BoxGeometry(floorWidth, buildingHeight, wallThickness);
-    const frontWall = new THREE.Mesh(frontWallGeometry, wallMaterial);
-    frontWall.position.set(
+    // 后侧墙体
+    const backWallGeometry = new THREE.BoxGeometry(floorWidth, buildingHeight, wallThickness);
+    const backWall = new THREE.Mesh(backWallGeometry, wallMaterial);
+    backWall.position.set(
         0,
         i * buildingHeight + buildingHeight/2,
         -floorDepth/2 - wallThickness/2
     );
-    scene.add(frontWall);
+    scene.add(backWall);
 
     // 左侧墙体
     const leftWallGeometry = new THREE.BoxGeometry(wallThickness, buildingHeight, floorDepth);
@@ -169,23 +174,6 @@ const createBuilding = () => {
   scene.add(directionalLight);
 };
 
-// 为场景添加光源
-const addLightsToScene = () => {
-  // 增强环境光
-  const ambientLight = new THREE.AmbientLight(0xffffff, 0.6); // 提高亮度
-  scene.add(ambientLight);
-
-  // 增强方向光并调整位置
-  const directionalLight = new THREE.DirectionalLight(0xffffff, 1.0); // 更亮
-  directionalLight.position.set(20, 30, 15); // 调整位置以改善视角
-  scene.add(directionalLight);
-
-  // 可选：添加一个暖色调点光源来增强细节表现
-  const pointLight = new THREE.PointLight(0xffddcc, 1.0, 50); // 暖光，影响范围50
-  pointLight.position.set(0, 10, 10); // 放置在建筑中间高度附近
-  scene.add(pointLight);
-};
-
 // 添加点击事件处理函数
 const onClick = (event: MouseEvent) => {
   if (!container.value) return;
@@ -208,7 +196,7 @@ const onClick = (event: MouseEvent) => {
   for (const intersect of intersects) {
     if (intersect.object instanceof THREE.Mesh &&
         intersect.object.material.color.getHex() === 0xaaaaaa) {
-      const floorLevel = Math.round(intersect.point.y / 5);
+      const floorLevel = Math.round(intersect.point.y / buildingHeight);
       console.log(`Floor at level ${floorLevel} clicked!`);
       break;
     }
@@ -217,6 +205,9 @@ const onClick = (event: MouseEvent) => {
 
 const animate = () => {
   animationId = requestAnimationFrame(animate);
+  // 实时获取相机位置
+  // console.log('Camera Position:', camera.position);
+
   if (controls) {
     controls.update();
   }

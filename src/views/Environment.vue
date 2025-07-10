@@ -4,8 +4,9 @@ import { getScreenData } from '@/api/api'
 import Card from "@/components/card/Card.vue";
 import TableComp from "@/components/table/TableComp.vue";
 import { barChartsOption, lineChartsOption } from "@/utils/echartsOptions";
-import DemoThree from "@/components/three/DemoThree.vue";
-// import Demo from "@/components/three/Demo.vue";
+// import DemoThree from "@/components/three/DemoThree.vue";
+// import DemoThreeGLB from "@/components/three/DemoThreeGLB.vue";
+// import DemoBaidu from "@/components/three/DemoBaidu.vue";
 
 // 获取温度湿度等数据
 let emvironmentData = reactive({
@@ -15,6 +16,10 @@ let emvironmentData = reactive({
   pm2_5Value: '',
   pm10Value: '',
   pm1Value: '',
+})
+
+onMounted(() => {
+  getEnvironmentData()
 })
 
 function getEnvironmentData() {
@@ -30,10 +35,6 @@ function getEnvironmentData() {
     console.error('获取屏幕数据失败:', error)
   })
 }
-
-onMounted(() => {
-  getEnvironmentData()
-})
 
 
 // 基于 barChartsOption 拷贝并定制 gasConcentrationOption
@@ -107,86 +108,74 @@ const equipmentOperationstatusColumn = ref([
 </script>
 
 <template>
-  <div id="environment">
-    <div class="left-content">
-      <div class="three-data-container">
-        <div class="three-data-circle">
-          <div>{{ emvironmentData.wdValue }}</div>
-          <div>温度</div>
-        </div>
-        <div class="three-data-circle">
-          <div>{{ emvironmentData.sdValue }}</div>
-          <div>湿度</div>
-        </div>
-        <div class="three-data-circle">
-          <div>{{ emvironmentData.gzdValue }}</div>
-          <div>光照度</div>
-        </div>
+  <div class="left-content">
+    <div class="three-data-container">
+      <div class="three-data-circle">
+        <div>{{ emvironmentData.wdValue }}</div>
+        <div>温度</div>
       </div>
-      <div>
-        <card title="压测检测">
-          <v-chart :option="pressureTestOptionData"/>
-        </card>
+      <div class="three-data-circle">
+        <div>{{ emvironmentData.sdValue }}</div>
+        <div>湿度</div>
       </div>
-      <div>
-        <card title="设备运行情况">
-          <table-comp :data="equipmentOperationstatusData" :columns="equipmentOperationstatusColumn" />
-        </card>
+      <div class="three-data-circle">
+        <div>{{ emvironmentData.gzdValue }}</div>
+        <div>光照度</div>
       </div>
     </div>
+    <div>
+      <card title="压测检测">
+        <v-chart :option="pressureTestOptionData" autoresize/>
+      </card>
+    </div>
+    <div>
+      <card title="设备运行情况">
+        <table-comp :data="equipmentOperationstatusData" :columns="equipmentOperationstatusColumn" />
+      </card>
+    </div>
+  </div>
     <div class="center-content">
-      <div>
-<!--        <demo></demo>-->
-        <demo-three></demo-three>
+<!--      <div>-->
+<!--        <demo-baidu></demo-baidu>-->
+<!--        <demo-three></demo-three>-->
+<!--        <demo-three-g-l-b></demo-three-g-l-b>-->
+<!--      </div>-->
+    <div class="dust-particle-concentration-content">
+      <card title="尘埃离子浓度">
+        <v-chart :option="dustParticleConcentrationOption" autoresize/>
+      </card>
+    </div>
+    </div>
+  <div class="right-content">
+    <div class="three-data-container">
+      <div class="three-data-circle">
+        <div>{{ emvironmentData.pm2_5Value }}</div>
+        <div>PM2.5</div>
       </div>
-      <div>
-        <card title="尘埃离子浓度">
-          <v-chart :option="dustParticleConcentrationOption"/>
-        </card>
+      <div class="three-data-circle">
+        <div>{{ emvironmentData.pm10Value }}</div>
+        <div>PM10</div>
+      </div>
+      <div class="three-data-circle">
+        <div>{{ emvironmentData.pm1Value }}</div>
+        <div>PM1.0</div>
       </div>
     </div>
-    <div class="right-content">
-      <div class="three-data-container">
-        <div class="three-data-circle">
-          <div>{{ emvironmentData.pm2_5Value }}</div>
-          <div>PM2.5</div>
-        </div>
-        <div class="three-data-circle">
-          <div>{{ emvironmentData.pm10Value }}</div>
-          <div>PM10</div>
-        </div>
-        <div class="three-data-circle">
-          <div>{{ emvironmentData.pm1Value }}</div>
-          <div>PM1.0</div>
-        </div>
-      </div>
-      <div>
-        <card title="浮游菌/沉降菌">
-          <v-chart :option="bacteriaOption"/>
-        </card>
-      </div>
-      <div>
-        <card title="气体浓度检测">
-          <v-chart :option="gasConcentrationOption"/>
-        </card>
-      </div>
+    <div>
+      <card title="浮游菌/沉降菌">
+        <v-chart :option="bacteriaOption" autoresize/>
+      </card>
+    </div>
+    <div>
+      <card title="气体浓度检测">
+        <v-chart :option="gasConcentrationOption" autoresize/>
+      </card>
     </div>
   </div>
 </template>
 
 <style scoped>
-#environment {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: space-around;
-}
 .left-content, .right-content {
-  width: 27%;
-  min-width: 25rem;
-  padding: 1% 0;
-  height: 100%;
-  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -197,22 +186,24 @@ const equipmentOperationstatusColumn = ref([
   width: 100%;
 }
 .center-content {
-  width: 40%;
-  padding: 1% 0;
-  height: 100%;
-  box-sizing: border-box;
+  bottom: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-direction: column;
 }
-.center-content > div:first-child {
+/*.center-content > div:first-child {
   height: 66%;
   width: 100%;
 }
 .center-content > div:last-child {
   height: 31%;
   width: 100%;
+}*/
+.dust-particle-concentration-content {
+  height: 27.5vh;
+  width: 100%;
+  margin-top: auto;
 }
 .three-data-container {
   background-image: url("@/assets/environment/earth.png");
@@ -233,7 +224,7 @@ const equipmentOperationstatusColumn = ref([
   flex-direction: column;
   width: 8rem;
   height: 8rem;
-  color: #FFFFFF;
+  color: #ffffff;
 }
 .three-data-circle:nth-child(2) {
   margin-top: -2.5rem;

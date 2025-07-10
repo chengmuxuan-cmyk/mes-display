@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import * as mapvthree from '@baidumap/mapv-three';
-import * as THREE from 'three';
+// import * as THREE from 'three';
 
 const container = ref();
 
@@ -45,12 +45,6 @@ onMounted(() => {
         size: 30,
     }));
     examplePoint.dataSource = exampleDataSource;
-
-    let model = engine.add(new mapvthree.SimpleModel({
-        name: 'model',
-        point: [105.943667,29.349341],
-        url: 'assets/models/building/5_tiyuzhongxin.glb',
-    }));
 
     examplePoint.addEventListener('click', (e) => {
         console.log(e);
