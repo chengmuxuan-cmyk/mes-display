@@ -34,12 +34,6 @@ use([
     DatasetComponent,
 ]);
 
-// 在项目入口文件中配置
-import * as mapvthree from '@baidumap/mapv-three';
-
-// 配置百度地图 AK
-mapvthree.BaiduMapConfig.ak = '2KfERvDiXS6baPk43LC4Z0mGbExBxpdl';
-
 const app = createApp(App)
 app.use(ElementPlus).use(router).component('v-chart', Echarts)
 app.mount('#app')

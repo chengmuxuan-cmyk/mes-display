@@ -4,12 +4,9 @@ import { getScreenData } from '@/api/api'
 import Card from "@/components/card/Card.vue";
 import TableComp from "@/components/table/TableComp.vue";
 import { barChartsOption, lineChartsOption } from "@/utils/echartsOptions";
-// import DemoThree from "@/components/three/DemoThree.vue";
-// import DemoThreeGLB from "@/components/three/DemoThreeGLB.vue";
-// import DemoBaidu from "@/components/three/DemoBaidu.vue";
 
 // 获取温度湿度等数据
-let emvironmentData = reactive({
+let environmentData = reactive({
   wdValue: '',
   sdValue: '',
   gzdValue: '',
@@ -25,12 +22,12 @@ onMounted(() => {
 function getEnvironmentData() {
   getScreenData().then(res => {
     console.log('获取屏幕数据成功:', res)
-    emvironmentData.wdValue = res.data['温度'] ? res.data['温度'] + '℃' : ''
-    emvironmentData.sdValue = res.data['湿度'] ? res.data['湿度'] + '%RH' : ''
-    emvironmentData.gzdValue = res.data['光照度'] ? res.data['光照度'] + 'L/H' : ''
-    emvironmentData.pm2_5Value = res.data['pm2.5'] ? res.data['pm2.5'] + 'μg/m³' : ''
-    emvironmentData.pm10Value = res.data['pm10'] ? res.data['pm10'] + 'μg/m³' : ''
-    emvironmentData.pm1Value = res.data['pm1.0'] ? res.data['pm1.0'] + 'μg/m³' : ''
+    environmentData.wdValue = res.data['温度'] ? res.data['温度'] + '℃' : ''
+    environmentData.sdValue = res.data['湿度'] ? res.data['湿度'] + '%RH' : ''
+    environmentData.gzdValue = res.data['光照度'] ? res.data['光照度'] + 'L/H' : ''
+    environmentData.pm2_5Value = res.data['pm2.5'] ? res.data['pm2.5'] + 'μg/m³' : ''
+    environmentData.pm10Value = res.data['pm10'] ? res.data['pm10'] + 'μg/m³' : ''
+    environmentData.pm1Value = res.data['pm1.0'] ? res.data['pm1.0'] + 'μg/m³' : ''
   }).catch(error => {
     console.error('获取屏幕数据失败:', error)
   })
@@ -40,7 +37,7 @@ function getEnvironmentData() {
 // 基于 barChartsOption 拷贝并定制 gasConcentrationOption
 const gasConcentrationOption = computed(() => {
   const option = JSON.parse(JSON.stringify(barChartsOption));
-  option.tooltip.formatter = '{a}: {c}%';
+  option.tooltip.formatter = '{b}{a}: {c}%';
   option.xAxis[0].data = ['CO₂', 'O₂', 'VOCs', 'CO', 'NO₂', 'SO₂'];
   option.yAxis[0].name = '%';
   option.series[0].data = [17, 79, 1, 1, 1, 1];
@@ -51,7 +48,7 @@ const gasConcentrationOption = computed(() => {
 // 基于 barChartsOption 拷贝并定制 dustParticleConcentrationOption
 const dustParticleConcentrationOption = computed(() => {
   const option = JSON.parse(JSON.stringify(barChartsOption));
-  option.tooltip.formatter = '{a}: {c}个/m³';
+  option.tooltip.formatter = '{b}{a}: {c}个/m³';
   option.xAxis[0].data = ['0.3μm', '0.5μm', '1.0μm', '5.0μm'];
   option.yAxis[0].name = '个/m³';
   option.series[0].data = [
@@ -68,7 +65,7 @@ const dustParticleConcentrationOption = computed(() => {
 // 基于 lineChartsOption 拷贝并定制数据 pressureTestOptionData
 const pressureTestOptionData = computed(() => {
   const option = JSON.parse(JSON.stringify(lineChartsOption));
-  option.tooltip.formatter = '{a}: {c}Pa';
+  option.tooltip.formatter = '{b}{a}: {c}Pa';
   option.xAxis[0].data = ['08:00', '10:00', '12:00', '14:00', '16:00', '18:00'];
   option.yAxis[0].name = 'Pa';
   option.series[0].data = [12.5, 13.8, 14.2, 15.1, 14.9, 15.2];
@@ -81,7 +78,7 @@ const pressureTestOptionData = computed(() => {
 // 基于 lineChartsOption 拷贝并定制数据 bacteriaOption
 const bacteriaOption = computed(() => {
   const option = JSON.parse(JSON.stringify(lineChartsOption));
-  option.tooltip.formatter = '{a}: {c}CFU/m³';
+  option.tooltip.formatter = '{b} {a}: {c}CFU/m³';
   option.xAxis[0].data = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
   option.yAxis[0].name = 'CFU/m³';
   option.series[0].data = [65, 59, 50, 58, 56, 55, 42];
@@ -91,18 +88,18 @@ const bacteriaOption = computed(() => {
   return option;
 });
 
-const equipmentOperationstatusData = ref([
-  { sb: '光照度变送器', yxzt: '正常', wlzt: '正常' },
-  { sb: '空气质量变送器', yxzt: '正常', wlzt: '正常' },
-  { sb: '烟雾变送器', yxzt: '正常', wlzt: '正常' },
-  { sb: '温湿度变送器', yxzt: '正常', wlzt: '正常' },
-  { sb: '管道风速变送器', yxzt: '正常', wlzt: '正常' },
+const equipmentOperationStatusData = ref([
+  { sb: '光照度变送器', runningState: '正常', networkStatus: '正常' },
+  { sb: '空气质量变送器', runningState: '正常', networkStatus: '正常' },
+  { sb: '烟雾变送器', runningState: '正常', networkStatus: '正常' },
+  { sb: '温湿度变送器', runningState: '正常', networkStatus: '正常' },
+  { sb: '管道风速变送器', runningState: '正常', networkStatus: '正常' },
 ])
 
-const equipmentOperationstatusColumn = ref([
+const equipmentOperationStatusColumn = ref([
   { prop: 'sb', label: '设备' },
-  { prop: 'yxzt', label: '运行状态' },
-  { prop: 'wlzt', label: '网络状态' },
+  { prop: 'runningState', label: '运行状态' },
+  { prop: 'networkStatus', label: '网络状态' },
 ])
 
 </script>
@@ -111,15 +108,15 @@ const equipmentOperationstatusColumn = ref([
   <div class="left-content">
     <div class="three-data-container">
       <div class="three-data-circle">
-        <div>{{ emvironmentData.wdValue }}</div>
+        <div>{{ environmentData.wdValue }}</div>
         <div>温度</div>
       </div>
       <div class="three-data-circle">
-        <div>{{ emvironmentData.sdValue }}</div>
+        <div>{{ environmentData.sdValue }}</div>
         <div>湿度</div>
       </div>
       <div class="three-data-circle">
-        <div>{{ emvironmentData.gzdValue }}</div>
+        <div>{{ environmentData.gzdValue }}</div>
         <div>光照度</div>
       </div>
     </div>
@@ -130,15 +127,12 @@ const equipmentOperationstatusColumn = ref([
     </div>
     <div>
       <card title="设备运行情况">
-        <table-comp :data="equipmentOperationstatusData" :columns="equipmentOperationstatusColumn" />
+        <table-comp :data="equipmentOperationStatusData" :columns="equipmentOperationStatusColumn" />
       </card>
     </div>
   </div>
     <div class="center-content">
 <!--      <div>-->
-<!--        <demo-baidu></demo-baidu>-->
-<!--        <demo-three></demo-three>-->
-<!--        <demo-three-g-l-b></demo-three-g-l-b>-->
 <!--      </div>-->
     <div class="dust-particle-concentration-content">
       <card title="尘埃离子浓度">
@@ -149,15 +143,15 @@ const equipmentOperationstatusColumn = ref([
   <div class="right-content">
     <div class="three-data-container">
       <div class="three-data-circle">
-        <div>{{ emvironmentData.pm2_5Value }}</div>
+        <div>{{ environmentData.pm2_5Value }}</div>
         <div>PM2.5</div>
       </div>
       <div class="three-data-circle">
-        <div>{{ emvironmentData.pm10Value }}</div>
+        <div>{{ environmentData.pm10Value }}</div>
         <div>PM10</div>
       </div>
       <div class="three-data-circle">
-        <div>{{ emvironmentData.pm1Value }}</div>
+        <div>{{ environmentData.pm1Value }}</div>
         <div>PM1.0</div>
       </div>
     </div>

@@ -2,25 +2,19 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import vueDevTools from 'vite-plugin-vue-devtools'
+import tsconfigPaths from 'vite-tsconfig-paths'
 import path from 'path' // 引入 path 模块
-import copy from 'rollup-plugin-copy'
 
 // https://vite.dev/config/
 export default defineConfig({
   base: './',
   plugins: [
-      vue(), vueJsx(), vueDevTools(),
-      copy({
-        targets: [
-          {src: 'node_modules/@baidumap/mapv-three/dist/assets', dest: 'public/mapvthree'},
-        ],
-        verbose: true,  //  vite需要加这个参数
-        hook: 'buildStart', // vite需要加这个参数
-      }),
+    vue(), vueJsx(),
+    vueDevTools(), tsconfigPaths(),
   ],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src') // 将 @ 指向 src 目录
+      '@': path.resolve(__dirname, './src'), // 将 @ 指向 src 目录
     }
   },
   server: {

@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { defineProps } from 'vue';
 
-const props = defineProps<{
+defineProps<{
   data: Array<{
-    sb: string;
-    yxzt: string;
-    wlzt: string;
+    sb?: string;
+    runningState?: string;
+    networkStatus?: string;
   }>;
   columns: Array<{
     prop: string;

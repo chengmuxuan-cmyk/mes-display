@@ -2,40 +2,57 @@
 // import backgroundMp4 from '@/assets/background_mp4.mp4'
 import imgCenter from '@/assets/environment/img_center.jpg'
 import HeaderComp from "@/components/header/HeaderComp.vue";
+import {onMounted, onUnmounted} from "vue";
 
-// 模拟出楼房的的顶部和底部线测坐标函数
-function calcBuildingYTop(x) {
-  return Math.floor(-(37 / 102 * x) + 535)
+onMounted(() => {
+  calcBuildingRange() // 初始化时获取一次窗口大小
+  window.addEventListener('resize', calcBuildingRange) // 监听 resize 事件
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', calcBuildingRange) // 移除监听器，防止内存泄漏
+})
+
+//根据视口计算楼房四个点的坐标
+let leftTopX = 0, leftTopY = 0, leftBottomX = 0, leftBottomY = 0, rightTopX = 0, rightTopY = 0, rightBottomX = 0, rightBottomY = 0;
+
+function calcBuildingRange() {
+  // 楼的左边距和右边距对于浏览器的宽度是0.333 - 0.67
+  leftTopX = leftBottomX = Math.floor(window.innerWidth * 0.333)
+  rightTopX = rightBottomX = Math.floor(window.innerWidth * 0.67)
+  // 楼的左侧范围的最高点和最低点以及右侧的最高点和最低点之间的比值分别为0.686，0.961，0.162，0.451
+  leftTopY = Math.floor(leftTopX * 0.686)
+  leftBottomY = Math.floor(leftBottomX * 0.961)
+  rightTopY = Math.floor(rightTopX * 0.162)
+  rightBottomY = Math.floor(rightBottomX * 0.451)
 }
-function calcBuildingYBottom(x) {
-  return Math.floor(-(7 / 102 * x) + 530)
-}
-// 监听背景图上的光标位置
-function bgImgMousemove(e) {
-  let data = checkMouseLocation(e)
-  if (typeof data === 'object') {
-    // 鼠标在楼内，将光标设置为手指形状
-    e.target.style.cursor = 'pointer';
-  } else {
-    // 鼠标不在楼内，恢复默认光标
-    e.target.style.cursor = 'default';
+
+/**
+ * 根据两点 (x1, y1) 和 (x2, y2) 确定一条直线，并给出 x 求出对应的 y
+ * @param x1 第一个点的 x 坐标
+ * @param y1 第一个点的 y 坐标
+ * @param x2 第二个点的 x 坐标
+ * @param y2 第二个点的 y 坐标
+ * @param x  给定的 x 值，用于求解 y
+ * @returns 计算得到的 y 值
+ */
+function getLineY(x1: number, y1: number, x2: number, y2: number, x: number): number {
+  if (x1 === x2) {
+    throw new Error('直线是垂直的，x1 和 x2 不能相等');
   }
+
+  const k = (y2 - y1) / (x2 - x1); // 计算斜率
+  const b = y1 - k * x1;           // 计算截距
+  return k * x + b;                // 返回指定 x 的 y 值
 }
-// 背景图点击事件
-function bgImgClick(e) {
-  let data = checkMouseLocation(e)
-  if(typeof data === 'object') {
-    const { topY, y, buildingH } = data
-    let levelTotal = 6
-    let level = levelTotal - Math.floor((y - topY) / buildingH * 6)
-    alert('这是' + level + '层')
-  }
-}
+
 // 判断鼠标位置是否在楼内
-function checkMouseLocation(e) {
-  if(e.clientX / e.target.clientWidth > 0.333 && e.clientX / e.target.clientWidth < 0.670) { // 点在了楼的左右范围内
-    let topY = calcBuildingYTop(e.clientX)
-    let bottomY = calcBuildingYBottom(e.clientX)
+function checkMouseLocation(e: any) {
+  // 楼的左边距和右边距对于浏览器的宽度是0.333 - 0.67
+  if(e.clientX >= leftTopX && e.clientX <= rightTopX) { // 点在了楼的左边距和右边距范围内
+    // 楼的左侧范围的最高点和最低点以及右侧的最高点和最低点之间的比值分别为0.686，0.961，0.162，0.451
+    let topY = getLineY(leftTopX, leftTopY, rightTopX, rightTopY, e.clientX)
+    let bottomY = getLineY(leftBottomX, leftBottomY, rightBottomX, rightBottomY, e.clientX)
     let y = e.clientY
     if(y > topY && y < bottomY) {
       let buildingH = bottomY - topY
@@ -50,6 +67,29 @@ function checkMouseLocation(e) {
     }
   } else {
     return false
+  }
+}
+
+// 监听背景图上的光标位置
+function bgImgMousemove(e: any) {
+  let data = checkMouseLocation(e)
+  if (typeof data === 'object') {
+    // 鼠标在楼内，将光标设置为手指形状
+    e.target.style.cursor = 'pointer';
+  } else {
+    // 鼠标不在楼内，恢复默认光标
+    e.target.style.cursor = 'default';
+  }
+}
+// 背景图点击事件
+function bgImgClick(e: any) {
+  console.log(e)
+  let data = checkMouseLocation(e)
+  if(typeof data === 'object') {
+    const { topY, y, buildingH } = data
+    let levelTotal = 6
+    let level = levelTotal - Math.floor((y - topY) / buildingH * 6)
+    alert('这是' + level + '层')
   }
 }
 </script>
