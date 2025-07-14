@@ -3,8 +3,8 @@ import { defineProps } from 'vue';
 
 defineProps<{
   data: Array<{
-    sb?: string;
-    runningState?: string;
+    device?: string;
+    runningStatus?: string;
     networkStatus?: string;
   }>;
   columns: Array<{

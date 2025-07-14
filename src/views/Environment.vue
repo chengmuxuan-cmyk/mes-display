@@ -89,16 +89,16 @@ const bacteriaOption = computed(() => {
 });
 
 const equipmentOperationStatusData = ref([
-  { sb: '光照度变送器', runningState: '正常', networkStatus: '正常' },
-  { sb: '空气质量变送器', runningState: '正常', networkStatus: '正常' },
-  { sb: '烟雾变送器', runningState: '正常', networkStatus: '正常' },
-  { sb: '温湿度变送器', runningState: '正常', networkStatus: '正常' },
-  { sb: '管道风速变送器', runningState: '正常', networkStatus: '正常' },
+  { device: '光照度变送器', runningStatus: '正常', networkStatus: '正常' },
+  { device: '空气质量变送器', runningStatus: '正常', networkStatus: '正常' },
+  { device: '烟雾变送器', runningStatus: '正常', networkStatus: '正常' },
+  { device: '温湿度变送器', runningStatus: '正常', networkStatus: '正常' },
+  { device: '管道风速变送器', runningStatus: '正常', networkStatus: '正常' },
 ])
 
 const equipmentOperationStatusColumn = ref([
-  { prop: 'sb', label: '设备' },
-  { prop: 'runningState', label: '运行状态' },
+  { prop: 'device', label: '设备' },
+  { prop: 'runningStatus', label: '运行状态' },
   { prop: 'networkStatus', label: '网络状态' },
 ])
 
