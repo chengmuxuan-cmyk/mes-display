@@ -11,6 +11,9 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  --header-height: 4rem;
+  --card-content-background-color: #05224d;
 }
 body {
   margin: 0;
@@ -48,4 +51,21 @@ body {
   padding: 1% 0;
   box-sizing: border-box;
   z-index: 2;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+
+/* 或者直接隐藏滚动条 */
+::-webkit-scrollbar {
+  display: none;
 }

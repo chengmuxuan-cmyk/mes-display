@@ -1,10 +1,26 @@
 <script setup lang="ts">
+import {computed} from "vue";
 import logo from '@/assets//logo.png'
 import { useCurrentTime } from '@/hooks/useCurrentTime'
+import { useHomePageStore } from '@/store/modules/homePageStore'; // 引入Pinia Store
+import { useRouter } from 'vue-router' // 引入useRouter
 
 const headerTitle = import.meta.env.VITE_HEADER_TITLE
 
 const { currentTime } = useCurrentTime()
+const homePageStore = useHomePageStore(); // 获取Pinia Store实例
+
+const isHomePage = computed(() => {
+  return homePageStore.isHomePage
+})
+
+// 获取路由实例
+const router = useRouter()
+
+// 实现路由回退方法
+const goBack = () => {
+  router.back()
+}
 </script>
 
 <template>
@@ -14,7 +30,8 @@ const { currentTime } = useCurrentTime()
     </div>
     <div class="header-title">{{ headerTitle }}</div>
     <div class="logo-content">
-      <img :src="logo" class="logo" alt="" />
+      <img :src="logo" class="logo" alt="" v-if="isHomePage" />
+      <el-button size="large" style="margin-left: auto" v-else @click="goBack">返回</el-button>
     </div>
   </div>
 </template>
@@ -59,5 +76,10 @@ const { currentTime } = useCurrentTime()
   width: 10rem;
   height: 2rem;
   margin-left: auto;
+}
+:deep(.el-button) {
+  background-color: var(--card-content-background-color) !important;
+  border-color: var(--card-content-background-color) !important;
+  color: #ffffff !important;
 }
 </style>

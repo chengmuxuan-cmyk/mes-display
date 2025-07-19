@@ -21,7 +21,7 @@ export default defineConfig({
     port: 8080,
     proxy: {
       '/modbus': {
-        target: 'http://192.168.120.66:8081', // 目标服务器地址
+        target: 'http://192.168.120.66:8082', // 目标服务器地址
         changeOrigin: true, // 是否改变源
         // rewrite: (path) => path.replace(/^\/modbus/, '') // 路径重写
       }

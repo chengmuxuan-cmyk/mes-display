@@ -1,12 +1,12 @@
-export const barChartsOption = {
+export const chartsColor = [`#01C0C8`, `#165DFF`, `#16C0FF`, `#015DC8`, `#FF0000`, `#FF1493`, `#FF00FF`, `#00FFFF`, `#00FF7F`, `#008000`, `#00FF00`, `#008080`, `#0000FF`, `#00008B`, `#000080`]
+
+export const lineAndBarChartsOption = {
     backgroundColor: `#05224d`,
     tooltip: {
         show: true,
         trigger: `axis`,
-        // formatter: '',
-        axisPointer: {
-            type: `shadow`
-        }
+        formatter: null,
+        valueFormatter: null,
     },
     grid: {
         top: `15%`,
@@ -16,7 +16,10 @@ export const barChartsOption = {
         containLabel: true
     },
     legend: {
-        show: false,
+        show: true,
+        textStyle: {
+            color: `#65F5FD`,
+        }
     },
     xAxis: [{
         type: `category`,
@@ -24,19 +27,43 @@ export const barChartsOption = {
         axisLine: {
             show: true,
             lineStyle: {
-                color: `rgba(255,255,255,.5)`
+                color: `rgba(255, 255, 255, .5)`
             }
         },
         axisLabel: {
             color: `#fff`,
-            margin: 16
+            margin: 16,
         },
         axisTick: {
             show: false
         },
-        data: [],
+        data: []
     }],
     yAxis: [{
+        show: true,
+        type: `value`,
+        name: '',
+        min: 0,
+        max: null,
+        splitNumber: 7,
+        splitLine: {
+            show: true,
+            lineStyle: {
+                color: `#0a3256`
+            }
+        },
+        axisLine: {
+            show: false
+        },
+        axisLabel: {
+            margin: 20,
+            color: `#65F5FD`,
+        },
+        axisTick: {
+            show: false
+        }
+    }, {
+        show: true,
         type: `value`,
         name: '',
         min: 0,
@@ -52,7 +79,7 @@ export const barChartsOption = {
         },
         axisLabel: {
             margin: 20,
-            color: `#65F5FD`
+            color: `#65F5FD`,
         },
         axisTick: {
             show: false
@@ -60,115 +87,30 @@ export const barChartsOption = {
     }],
     series: [{
         name: ``,
-        type: `bar`,
-        stack: `ip`,
+        type: ``,
+        // 柱状图配置项
+        stack: ``,
         barWidth: 20,
+        // 折线图配置项
+        showAllSymbol: true,
+        symbol: `emptyCircle`,
+        symbolSize: 6,
+        areaStyle: null,
+
         tooltip: {
             show: true
         },
         label: {
-            show: false,
-            position: `top`,
-            color: `#fff`
+            show: false
         },
         itemStyle: {
-          color: {
-            colorStops: [{
-              offset: 0,
-              color: `rgba(0,179,202,.9)`
-            }, {
-              offset: 1,
-              color: `rgba(2,39,47,.5)`
-            }],
-            x: 0,
-            y: 0,
-            x2: 0,
-            y2: 1,
-            type: `linear`,
-            global: false
-          }
+            color: ``
         },
-        data: [],
+        lineStyle: {
+            color: ``
+        },
+        yAxisIndex: 0,
+        seriesIndex: 0,
+        data: []
     }]
-};
-export const lineChartsOption = {
-  backgroundColor: `#05224d`,
-  tooltip: {
-    show: true,
-    trigger: `axis`,
-    // formatter: '',
-    axisPointer: {
-      type: `shadow`
-    }
-  },
-  grid: {
-    top: `15%`,
-    left: `1%`,
-    right: `1%`,
-    bottom: `8%`,
-    containLabel: true
-  },
-  legend: {
-    show: false,
-  },
-  xAxis: [{
-    type: `category`,
-    boundaryGap: true,
-    axisLine: {
-      show: true,
-      lineStyle: {
-        color: `rgba(255,255,255,.5)`
-      }
-    },
-    axisLabel: {
-      color: `#fff`,
-      margin: 16,
-    },
-    axisTick: {
-      show: false
-    },
-    data: []
-  }],
-  yAxis: [{
-    type: `value`,
-    name: '',
-    min: 0,
-    splitNumber: 7,
-    splitLine: {
-      show: true,
-      lineStyle: {
-        color: `#0a3256`
-      }
-    },
-    axisLine: {
-      show: false
-    },
-    axisLabel: {
-      margin: 20,
-      color: `#65F5FD`,
-    },
-    axisTick: {
-      show: false
-    }
-  }],
-  series: [{
-    name: ``,
-    type: `line`,
-    showAllSymbol: true,
-    symbol: `emptyCircle`,
-    symbolSize: 6,
-    lineStyle: {
-      color: ``
-    },
-    label: {
-      show: false
-    },
-    itemStyle: {
-      color: ``
-    },
-    tooltip: {
-      show: true
-    },
-    data: []
-  }]
-};
+}

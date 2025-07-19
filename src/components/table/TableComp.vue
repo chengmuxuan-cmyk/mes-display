@@ -1,27 +1,87 @@
 <script setup lang="ts">
-import { defineProps } from 'vue';
+import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue';
+import { TableColumnArray } from '@/types/table';
 
-defineProps<{
-  data: Array<{
-    device?: string;
-    runningStatus?: string;
-    networkStatus?: string;
-  }>;
-  columns: Array<{
-    prop: string;
-    label: string;
-  }>;
+const props = defineProps<{
+  data: any[];
+  columns: TableColumnArray;
 }>();
+
+const tableRef = ref(); // 获取表格引用
+let scrollInterval: ReturnType<typeof setInterval> | null = null;
+
+
+// 开始自动滚动
+const startAutoScroll = () => {
+  if (scrollInterval) return
+
+  const bodyWrapper = tableRef.value?.$el?.querySelector('.el-scrollbar__wrap') as HTMLElement | null
+
+  if (!bodyWrapper) {
+    console.warn('无法获取表格滚动容器')
+    return
+  }
+
+  console.log('bodyWrapper:', bodyWrapper)
+
+  scrollInterval = setInterval(() => {
+    console.log('bodyWrapper.scrollTop:', bodyWrapper.scrollTop)
+    console.log('bodyWrapper.clientHeight:', bodyWrapper.clientHeight)
+    console.log('bodyWrapper.scrollHeight:', bodyWrapper.scrollHeight)
+    if (bodyWrapper.scrollTop + bodyWrapper.clientHeight >= bodyWrapper.scrollHeight) {
+      bodyWrapper.scrollTop = 0 // 滚动到底部后回到顶部
+    } else {
+      bodyWrapper.scrollTop += 1 // 每次下移2px
+    }
+  }, 50)
+}
+
+// 停止滚动
+const stopAutoScroll = () => {
+  if (scrollInterval) {
+    clearInterval(scrollInterval)
+    scrollInterval = null
+  }
+}
+
+onMounted(() => {
+  // 可以在 mounted 后自动开始滚动
+  nextTick(() => {
+    startAutoScroll()
+  })
+})
+
+onBeforeUnmount(() => {
+  stopAutoScroll()
+})
 </script>
 
 <template>
-  <el-table :data="data" id="table" class="tableComp" stripe>
-    <el-table-column v-for="(item, index) in columns" :key="index"
-       :prop="item.prop" :label="item.label"></el-table-column>
-  </el-table>
+  <div class="table-container">
+    <el-table
+        :data="data"
+        id="table"
+        class="tableComp"
+        stripe
+        ref="tableRef"
+    >
+      <el-table-column
+          v-for="(item, index) in columns"
+          :key="index"
+          :prop="item.prop"
+          :label="item.label"
+          :width="item.width"
+      ></el-table-column>
+    </el-table>
+  </div>
 </template>
 
 <style scoped>
+.table-container {
+  height: 100%; /* 控制表格容器高度 */
+  overflow: hidden;
+}
+
 .tableComp {
   width: 100%;
   height: 100%;
@@ -36,18 +96,20 @@ defineProps<{
   color: #ffffff !important;
 }
 
-.tableComp.el-table :deep(td.el-table__cell),
-.tableComp.el-table :deep(th.el-table__cell.is-leaf),
-:deep(.el-table__body tr td) {
-  border-bottom: none;
+.tableComp :deep(.el-table__body-wrapper) {
+  height: 100%;
+  overflow: hidden;
 }
 
-/* 隐藏表格底部边框线 */
-:deep(.el-table__inner-wrapper::before) {
+.tableComp :deep(.el-table__inner-wrapper::before) {
   height: 0;
 }
 
-.tableComp.el-table :deep(.el-table__cell) {
+.tableComp :deep(.el-table__cell) {
   padding: 4px 0 !important;
+}
+
+.tableComp :deep(.el-scrollbar__wrap) {
+  scroll-behavior: smooth;
 }
 </style>

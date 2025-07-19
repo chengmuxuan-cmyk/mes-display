@@ -3,6 +3,9 @@ import './style.css'
 import router from "./router";
 import App from './App.vue'
 
+import autoScroll from './directives/autoScroll'
+
+import pinia from './store'
 
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
@@ -14,6 +17,7 @@ import {
     BarChart,
     LineChart,
     PieChart,
+    GaugeChart,
 } from "echarts/charts";
 import {
     GridComponent,
@@ -27,6 +31,7 @@ use([
     BarChart,
     LineChart,
     PieChart,
+    GaugeChart,
     GridComponent,
     TooltipComponent,
     LegendComponent,
@@ -35,5 +40,21 @@ use([
 ]);
 
 const app = createApp(App)
-app.use(ElementPlus).use(router).component('v-chart', Echarts)
+
+// 挂载Pinia实例
+app.use(pinia)
+
+// 挂载路由实例
+app.use(router)
+
+// 挂载ElementPlus
+app.use(ElementPlus)
+
+// 挂载ECharts
+app.component('v-chart', Echarts)
+
+// 绑定指令
+app.directive('auto-scroll', autoScroll)
+
+// 挂载应用
 app.mount('#app')

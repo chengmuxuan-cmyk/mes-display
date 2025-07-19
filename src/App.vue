@@ -1,8 +1,14 @@
 <script setup lang="ts">
 // import backgroundMp4 from '@/assets/background_mp4.mp4'
 import imgCenter from '@/assets/environment/img_center.jpg'
+import level2 from '@/assets/level_2.jpg'
+import level3 from '@/assets/level_3.jpg'
 import HeaderComp from "@/components/header/HeaderComp.vue";
-import {onMounted, onUnmounted} from "vue";
+import {onMounted, onUnmounted, ref} from "vue";
+import Card from "@/components/card/Card.vue";
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 onMounted(() => {
   calcBuildingRange() // 初始化时获取一次窗口大小
@@ -83,14 +89,33 @@ function bgImgMousemove(e: any) {
 }
 // 背景图点击事件
 function bgImgClick(e: any) {
-  console.log(e)
   let data = checkMouseLocation(e)
   if(typeof data === 'object') {
     const { topY, y, buildingH } = data
     let levelTotal = 6
-    let level = levelTotal - Math.floor((y - topY) / buildingH * 6)
-    alert('这是' + level + '层')
+    level.value = levelTotal - Math.floor((y - topY) / buildingH * 6)
+    if(planImgList.value[level.value - 1]) {
+      // planShow.value = true
+      // planTitle.value = '第' + level.value + '层平面图'
+      router.push({
+        name: 'floorPlan',
+        params: { level: level.value } // 动态路径参数
+      })
+    }
   }
+}
+
+let planShow = ref(false)
+let planTitle = ref('')
+let planImgList = ref( [
+    '', level2 , level3, '', '', ''
+])
+let level = ref(1)
+
+// 关闭平面图展示
+function closePlanMask() {
+  planShow.value = false
+  planTitle.value = ''
 }
 </script>
 
@@ -112,6 +137,11 @@ function bgImgClick(e: any) {
   </div>
   <!--内容-->
   <router-view />
+<!--  <div class="plan-content-mask" v-if="planShow" @click="closePlanMask">-->
+<!--    <card :title="planTitle" class="plan-card">-->
+<!--      <img :src="planImgList[level - 1]" alt="" class="plan-img" />-->
+<!--    </card>-->
+<!--  </div>-->
 </template>
 
 <style scoped>
@@ -147,7 +177,27 @@ function bgImgClick(e: any) {
   top: 0;
   left: 0;
   right: 0;
-  height: 4rem;
+  height: var(--header-height);
   z-index: 2;
+}
+.plan-content-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.plan-card {
+  width: auto;
+  height: calc(100% - 2 * var(--header-height));
+}
+.plan-img {
+  height: 100%;
+  width: auto;
 }
 </style>
