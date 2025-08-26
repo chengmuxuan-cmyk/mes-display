@@ -31,7 +31,7 @@ body {
 }
 .left-content, .right-content {
   position: absolute;
-  top: 4rem;
+  top: var(--header-height);
   bottom: 0;
   width: 27%;
   padding: 1% 0;
