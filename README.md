@@ -12,7 +12,6 @@ MES 展示端前端项目，基于 `Vue 3 + TypeScript + Vite + Element Plus + E
 - Pinia
 - Vue Router
 - Axios
-- viewerjs / v-viewer
 
 ## 本地开发
 
@@ -37,6 +36,4 @@ npm run preview
 
 ## 说明
 
-- 当前仓库已从内部 Gitea 迁移到 GitHub。
-- 原默认 Vite 模板 README 已替换为项目说明。
-- 建议后续补充业务页面列表、接口说明和部署方式。
+建议后续补充展示页面清单、接口约定、环境变量说明和部署流程。
